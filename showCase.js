@@ -3,6 +3,7 @@ var overlay;
 var searchLabel;
 var searchBtn;
 var showcaseFrame;
+var displayToggle;
 
 // This sets the global vars above and sets up connection
 // to matterport once the page has finished loading
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchBtn = document.getElementById('search-btn')
     list = document.getElementById('mt-container');
     overlay = document.getElementById('overlay-container');
+    displayToggle = document.getElementById('overlay-toggle');
     overlay.style.visibility = 'hidden';
     showcaseFrame.addEventListener('load', showcaseLoader, true);
 
@@ -45,6 +47,18 @@ function showcaseLoader()
 async function showcaseHandler(mpSdk)
 {
    
+    displayToggle.addEventListener('click', ()=> {
+        if(overlay.style.visibility == 'hidden')
+        {
+            overlay.style.visibility = 'visible';
+        }
+        else if(overlay.style.visibility == 'visible')
+        {
+            overlay.style.visibility ='hidden';
+        }
+        
+    })
+
     console.log("Connected to Matterport SDK");
     var model = await mpSdk.Model.getData();
     console.log("Connected to " + model.sid);
@@ -58,26 +72,7 @@ async function showcaseHandler(mpSdk)
     data.forEach(appendToUList)
     overlay.style.visibility = 'visible';
 
-    /**
-     * Author: Carlos Meza
-     * Description: Moves the user to matter tag based on click
-     * Input: List item is clicked
-     * Output: User then gets moved to appropriate tag
-     */
-    list.addEventListener('click', (e)=> {
-        mpSdk.Mattertag.navigateToTag(e.target.id);
-    })
-
-    searchLabel.addEventListener('keyup', (e) => {
-        if(e.keyCode==13)
-        {
-            e.preventDefault();
-            search();
-        }
-    })
-
-    searchBtn.addEventListener('click', search)
-
+    // mattertag functionality
     function parseMattertags(mattertags)
     {
         var tags = [];
@@ -91,6 +86,7 @@ async function showcaseHandler(mpSdk)
         return tags;
     }
 
+    // mattertag functionality 
     function appendToUList(data)
     {
         var li = document.createElement('li');
@@ -99,6 +95,31 @@ async function showcaseHandler(mpSdk)
         li.setAttribute('id',data[1])
         list.appendChild(li);
     }
+
+    /**
+     * Author: Carlos Meza
+     * Description: Moves the user to matter tag based on click
+     * Input: List item is clicked
+     * Output: User then gets moved to appropriate tag
+     */
+    list.addEventListener('click', (e)=> {
+        mpSdk.Mattertag.navigateToTag(e.target.id);
+    })
+
+    //search input functionality
+    searchLabel.addEventListener('keyup', (e) => {
+        if(e.keyCode==13)
+        {
+            e.preventDefault();
+            search();
+        }
+    })
+
+    //search input functionality
+    searchLabel.addEventListener('input', search);
+
+    //search input functionality
+    searchBtn.addEventListener('click', search)
 
     function search() {
         var input, filter, ul, li, i, txtValue;
@@ -122,4 +143,3 @@ async function showcaseHandler(mpSdk)
     }
 
 }
-
