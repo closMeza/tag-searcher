@@ -73,6 +73,9 @@ async function showcaseHandler(mpSdk)
     overlay.style.visibility = 'visible';
     mapOverlay.style.visibility = 'visible';
 
+    //Displays current position of user on minimap
+    mpSdk.on(mpSdk.Sweep.Event.ENTER, switchedSweep);
+
     // MiniMap functionality begins here
     var mattertags = await mpSdk.Mattertag.getData();
 
@@ -223,6 +226,7 @@ async function showcaseHandler(mpSdk)
      */
     list.addEventListener('click', (e)=> {
         mpSdk.Mattertag.navigateToTag(e.target.id);
+        mapOverlay.style.visibility ='hidden';
     })
 
     //search input functionality activates on pressing Enter
@@ -300,5 +304,39 @@ async function showcaseHandler(mpSdk)
             mapOverlay.style.visibility ='hidden';
         }
     });
+
+    /**
+     * Author: Carlos Meza
+     * Description: Places marker on minimap based on user's position
+     * Input: prev sweep, curr sweep
+     * Output: Changes active sweep to the one entered by user
+     */
+    function switchedSweep(prev, curr)
+    {
+        var newSweep  = document.getElementById('m' + curr);
+        var oldSweep = document.getElementById('m' + prev) || curr;
+
+        settings.sweep = (newSweep && newSweep.vaule) || '';
+        toggleSweep(newSweep,oldSweep);
+    }
+
+    /**
+     * Author: Carlos Meza
+     * Description: removes active class from old sweep pos
+     *              and adds it to new sweep pos
+     *              this is in relation to minimap
+     */
+    function toggleSweep(curr, prev)
+    {
+        if(prev) 
+        {
+            prev.classList.remove('active');
+        }
+
+        if(curr)
+        {
+            curr.classList += ' active';
+        }
+    }
 
 }
