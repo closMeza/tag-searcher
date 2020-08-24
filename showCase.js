@@ -69,10 +69,6 @@ async function showcaseHandler(mpSdk)
     var model = await mpSdk.Model.getData();
     console.log("Connected to " + model.sid);
 
-    // displays overlays
-    overlay.style.visibility = 'visible';
-    mapOverlay.style.visibility = 'visible';
-
     //Displays current position of user on minimap
     mpSdk.on(mpSdk.Sweep.Event.ENTER, switchedSweep);
 
@@ -280,6 +276,7 @@ async function showcaseHandler(mpSdk)
         if(overlay.style.visibility == 'hidden')
         {
             overlay.style.visibility = 'visible';
+            mapOverlay.style.visibility ='hidden';
         }
         else if(overlay.style.visibility == 'visible')
         {
@@ -298,10 +295,12 @@ async function showcaseHandler(mpSdk)
         if(mapOverlay.style.visibility == 'hidden')
         {
             mapOverlay.style.visibility = 'visible';
+            overlay.style.visibility ='hidden';
         }
         else if(mapOverlay.style.visibility == 'visible')
         {
             mapOverlay.style.visibility ='hidden';
+        
         }
     });
 

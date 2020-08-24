@@ -10,19 +10,32 @@ body {
     overflow: hidden;
 }
 
-#overlay-toggle {
+#overlay-test {
     position: absolute;
-    right:360px;
+    top: 52px;
+    left: 35px;
+    z-index:2;
+    width:359px;
+    color:white;
+    background-color:rgba(0,0,0,0.5);
+}
+
+
+#overlay-toggle {
+    position: relative;
     z-index:2;
     background-color: rgba(0,0,0,0.5);
     cursor:pointer;
     color:white;
 }
 
+
 /*Need to create a class for the overlays containers*/
 #overlay-container {
     position: absolute;
     display: inline-block;
+    top: 78px;
+    left: 20px;
     width: 359px;
     height: 35%;
     background-color: rgba(0,0,0,0.5);
@@ -80,9 +93,9 @@ li {
 #minimap-overlay {
     position: absolute;
     display: inline-block;
-    bottom: 25px;
-    left:37.5%;
-    width: 30%;
+    top: 78px;
+    left: 20px;
+    width: 359px;
     height: 35%;
     background-color: rgba(0,0,0,0.5);
     z-index: 2;
@@ -90,9 +103,7 @@ li {
 }
 
 #minimap-toggle {
-    position: absolute;
-    bottom:0px;
-    left:50%;
+    position: relative;
     z-index:2;
     background-color: rgba(0,0,0,0.5);
     cursor:pointer;
@@ -120,6 +131,10 @@ li {
     box-sizing: content-box;
     background-color: transparent;
     font-size: 10px;
+}
+
+.sweep:hover {
+    background-color: #5C9D45;
 }
 
 .sweep.active {

@@ -16,11 +16,16 @@
 </head>
 <body>
     <div class="container-fluid p-0">
-        <div class="container-fluid">
-            <div class="row justify-content-end">
-                <div id="overlay-toggle">
-                    <span id="display">tags</span>
+        <div clas="container" id="overlay">
+            <div class="row" id="overlay-test">
+                <div class="col-auto" id="overlay-toggle" >
+                    Tags
                 </div>
+                <div class="col-auto" id="minimap-toggle" >
+                    Map
+                </div>
+            </div>
+            <div class="row">
                 <div id="overlay-container">
                     <label id="serach-label" for='search' style="color:white; margin-left: 2vmin;">Search:</label>
                     <input id="search-bar" type="search" aria-label="Search">
@@ -32,19 +37,18 @@
                     </ul>
                 </div>
             </div>
-            <div class="row align-items-end">
-                <div id="minimap-toggle">
-                    <span id="mm-display">MiniMap</span>
-                </div>
+            <div class="row">
                 <div id="minimap-overlay">
                     <img class="responsive-img" src="model_floorplan.png">
                     <div id="map">
-
+    
                     </div>
                 </div>
             </div>
         </div>
 
+        
+   
         <iframe  title ="model" src="https://my.matterport.com/show?m=et3PyDFTs5H&title=1&play=1&qs=1&gt=0&hr=0" frameBorder="0" allowFullScreen allow ="vr" id="showcase_iframe"></iframe>
     </div>
     <script src="./showCase.js"></script>
