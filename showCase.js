@@ -1,14 +1,26 @@
 //'use strict'; this prevents the use of undeclared variables
+
+// Main toggle var
+var mainToggle;
+var mainOverlay;
+
+// Global vars associated with Tag Seacher
 var list;
-var overlay;
+var tagsOverlay;
 var searchLabel;
 var searchBtn;
 var showcaseFrame;
 var tagToggle;
+
+//Global vars associated with miniMap
 var map; // handling first
 var mapOverlay;
 var mapToggle; // handling last
 var minX, minY, maxX, maxY; // coords related to map
+
+//Global vars assocated with details and model info
+var modelInfo;
+var details;
 
 var settings = {
     sweep: '',
@@ -19,20 +31,30 @@ var settings = {
 // This sets the global vars above and sets up connection
 // to matterport once the page has finished loading
 document.addEventListener('DOMContentLoaded', () => {
+    mainToggle = document.getElementById('main-toggle');
+    mainOverlay = document.getElementById('overlay');
+    mainOverlay.style.visibility = 'visible';
+    
     showcaseFrame = document.getElementById('showcase_iframe');
 
     searchLabel = document.getElementById('search-bar');
     searchBtn = document.getElementById('search-btn')
     list = document.getElementById('mt-container');
 
-    overlay = document.getElementById('overlay-container');
-    tagToggle = document.getElementById('overlay-toggle');
-    overlay.style.visibility = 'hidden';
+    tagsOverlay = document.getElementById('tags-container');
+    tagToggle = document.getElementById('tags-toggle');
+    tagsOverlay.style.visibility = 'hidden';
 
     map = document.getElementById('map');
     mapToggle = document.getElementById('minimap-toggle');
     mapOverlay = document.getElementById('minimap-overlay');
     mapOverlay.style.visibility = 'hidden';
+
+    modelInfo = document.getElementById('model-info');
+
+    detailsToggle = document.getElementById('details-toggle');
+    details = document.getElementById('details-overlay');
+    details.style.visibility= 'hidden';
 
     showcaseFrame.addEventListener('load', showcaseLoader, true);
 
@@ -68,6 +90,13 @@ async function showcaseHandler(mpSdk)
     console.log("Connected to Matterport SDK");
     var model = await mpSdk.Model.getData();
     console.log("Connected to " + model.sid);
+
+    var mdlDetails = await mpSdk.Model.getDetails();
+
+    modelInfo.textContent = mdlDetails.name;
+
+    details.textContent = mdlDetails.formattedAddress;
+
 
     //Displays current position of user on minimap
     mpSdk.on(mpSdk.Sweep.Event.ENTER, switchedSweep);
@@ -273,14 +302,15 @@ async function showcaseHandler(mpSdk)
      * 
      */
     tagToggle.addEventListener('click', ()=> {
-        if(overlay.style.visibility == 'hidden')
+        if(tagsOverlay.style.visibility == 'hidden')
         {
-            overlay.style.visibility = 'visible';
+            tagsOverlay.style.visibility = 'visible';
             mapOverlay.style.visibility ='hidden';
+            details.style.visibility = 'hidden';
         }
-        else if(overlay.style.visibility == 'visible')
+        else if(tagsOverlay.style.visibility == 'visible')
         {
-            overlay.style.visibility ='hidden';
+            tagsOverlay.style.visibility ='hidden';
         }
         
     });
@@ -295,7 +325,8 @@ async function showcaseHandler(mpSdk)
         if(mapOverlay.style.visibility == 'hidden')
         {
             mapOverlay.style.visibility = 'visible';
-            overlay.style.visibility ='hidden';
+            tagsOverlay.style.visibility ='hidden';
+            details.style.visibility = 'hidden';
         }
         else if(mapOverlay.style.visibility == 'visible')
         {
@@ -304,6 +335,33 @@ async function showcaseHandler(mpSdk)
         }
     });
 
+    detailsToggle.addEventListener('click', () => {
+        if(details.style.visibility == 'hidden')
+        {
+            details.style.visibility = 'visible';
+            tagsOverlay.style.visibility ='hidden';
+            mapOverlay.style.visibility ='hidden';
+        }
+        else if(details.style.visibility == 'visible')
+        {
+            details.style.visibility = 'hidden';
+        }
+    });
+
+    mainToggle.addEventListener('click', () => {
+        if(mainOverlay.style.visibility == 'visible')
+        {
+            mainOverlay.style.visibility = 'hidden';
+            tagsOverlay.style.visibility ='hidden';
+            mapOverlay.style.visibility ='hidden';
+            details.style.visibility = 'hidden';
+
+        }
+        else if(mainOverlay.style.visibility == 'hidden')
+        {
+            mainOverlay.style.visibility = 'visible';
+        }
+    })
     /**
      * Author: Carlos Meza
      * Description: Places marker on minimap based on user's position

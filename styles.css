@@ -10,10 +10,34 @@ body {
     overflow: hidden;
 }
 
-#overlay-test {
+
+#main-toggle {
+    position: absolute;
+    background-color: rgba(0,0,0,0.5);
+    color:white;
+    z-index:2;
+}
+
+#title-gui {
+    position:absolute;
+    background-color: rgba(0,0,0,0.5);
+    left: 50px;
+    width: 359px;
+    height:3em;
+    z-index:2;
+    color:white;
+}
+
+#title {
+    position: relative;
+    color:white;
+
+}
+
+#choice-bar{
     position: absolute;
     top: 52px;
-    left: 35px;
+    left: 50px;
     z-index:2;
     width:359px;
     color:white;
@@ -21,7 +45,7 @@ body {
 }
 
 
-#overlay-toggle {
+#tags-toggle {
     position: relative;
     z-index:2;
     background-color: rgba(0,0,0,0.5);
@@ -31,20 +55,22 @@ body {
 
 
 /*Need to create a class for the overlays containers*/
-#overlay-container {
+#tags-container {
     position: absolute;
     display: inline-block;
     top: 78px;
-    left: 20px;
+    left: 35px;
     width: 359px;
     height: 35%;
     background-color: rgba(0,0,0,0.5);
     z-index: 2;
     cursor: pointer;
 }
+
 #mt-container {
     position: relative;
     top:0;
+    padding-left:75px;
     list-style:none;
     min-height: 10%;
     max-height: 80%;
@@ -94,12 +120,33 @@ li {
     position: absolute;
     display: inline-block;
     top: 78px;
-    left: 20px;
+    left: 35px;
     width: 359px;
     height: 35%;
     background-color: rgba(0,0,0,0.5);
     z-index: 2;
     cursor: pointer;
+}
+
+#details-overlay {
+    position: absolute;
+    display: inline-block;
+    top: 78px;
+    left: 35px;
+    width: 359px;
+    height: 3%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+    color:white
+}
+
+#details-toggle {
+    position: relative;
+    z-index:2;
+    background-color: rgba(0,0,0,0.5);
+    cursor:pointer;
+    color:white;
 }
 
 #minimap-toggle {
