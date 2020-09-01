@@ -45,8 +45,9 @@ var settings = {
 // to matterport once the page has finished loading
 document.addEventListener('DOMContentLoaded', () => {
     mainToggle = document.getElementById('main-toggle');
+    mainToggle.style.visibility = 'hidden';
     mainOverlay = document.getElementById('overlay');
-    mainOverlay.style.visibility = 'visible';
+    mainOverlay.style.visibility = 'hidden';
     
     showcaseFrame = document.getElementById('showcase_iframe');
 
@@ -106,6 +107,8 @@ function showcaseLoader()
  */
 async function showcaseHandler(mpSdk)
 {
+    mainToggle.style.visibility = 'visible';
+    mainOverlay.style.visibility = 'visible';
     console.log("Connected to Matterport SDK");
     var model = await mpSdk.Model.getData();
     console.log("Connected to " + model.sid);
@@ -156,6 +159,7 @@ async function showcaseHandler(mpSdk)
         }
     });
 
+
     // Mapping of the sweeps utilizing sweepsToMap function
     sweeps.map(sweepsToMap);
 
@@ -171,15 +175,16 @@ async function showcaseHandler(mpSdk)
         if(sweep)
         {
             var btn = document.createElement('BUTTON'); // creates the elem
-            var attList = 'sweep z-depth-3' //class defined inside styles.css
-            var x = scaleToMap(sweep.x, minX, maxX, 71, 4); // these numbers give the appropiate postion for each sweep
-            var y = scaleToMap(sweep.y, minY, maxY, 61, 16); // these numbers give the appropiate postion for each sweep
+            var attList = 'sweep'; // z-depth-3' //class defined inside styles.css
+            var x = scaleToMap(sweep.x, minX, maxX,  64, 2); // these numbers give the appropiate postion for each sweep
+            var y = scaleToMap(sweep.y, minY, maxY, 62, 22); // these numbers give the appropiate postion for each sweep
 
             btn.setAttribute('id', 'm' + sweep.mid); // setting the attributes for the button element
             btn.setAttribute('value', sweep.mid);
             btn.style.left = x + '%';   // positioning buttons accordingly to fit minimap
             btn.style.top = y + '%';
-            btn.style.transform.scale = 1;
+            btn.style.transform = 'scale(1,1)';
+            btn.style.display = 'inline-block';
             btn.setAttribute('class', attList); // attaches  class to button element
 
             btn.addEventListener('click', moveToSweep); // creates an eventlistener for each button calls moveToSweep func
@@ -430,9 +435,3 @@ async function showcaseHandler(mpSdk)
     }
 
 }
-
-/**
- *     //lets create image for minimap
-
-            
- */
