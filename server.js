@@ -1,16 +1,14 @@
-import 'dotenv/config.js';
-import express from 'express';
-import HTTP, { get } from 'http';
-import path from 'path';
-import cors from 'cors';
-import ejs from 'ejs';
-import socket from 'socket.io';
-import fetch from 'node-fetch';
+require('dotenv').config();
+const express = require('express');
+var app = require('express')();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+const path = require('path');
+const cors = require('cors');
+const fetch = require('node-fetch');
+const ejs = require('ejs');
 
 //Default setup for sever
-const app = express();
-const http = HTTP.createServer(app);
-const __dirname = path.resolve();
 
 var model_id;
 
@@ -23,29 +21,12 @@ app.set('view engine', 'ejs');
 
 const PORT = process.env.PORT || 8080;
 
-//populates index.html page
-app.get('/', (req, res)=>{
-    res.sendFile(path.join(__dirname + '/index.html'));
-    model_id = req.query.m;    
-    
-})
+app.use(express.static(path.join(__dirname, 'public')));
 
-// populates showCase.js this is where we will pass data too and from client
-app.get('/showCase.js', (req,res)=> {
-    res.sendFile(path.join(__dirname + '/showCase.js'))
-})
-//populates styles.css
-app.get('/styles.css', (req,res)=> {
-    res.sendFile(path.join(__dirname +'/styles.css'))
-})
-
-var io = socket(http);
 io.on('connection', (socket)=> {
     console.log("connected")
     socket.on('pic', (msg) => {
-        console.log('message:' + msg);
-        console.log(model_id)
-
+        model_id = msg;
         var tok = process.env.TOKEN;
         var sec = process.env.SECRET;
     
@@ -56,8 +37,7 @@ io.on('connection', (socket)=> {
             'Authorization':'Basic ' + auth,
             'Content-Type': 'application/json'
         }
-        
-        const result = fetch(`http://api.matterport.com/api/models/graph?query={model(id:"${model_id}"){assets{floorplan(format:"png", flags:photogramy){url}}}}`, {
+        fetch(`http://api.matterport.com/api/models/graph?query={model(id:"${model_id}"){assets{floorplan(format:"png", flags:photogramy){url}}}}`, {
             method:'GET',
             headers:headers,
         })
