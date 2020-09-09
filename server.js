@@ -37,14 +37,25 @@ io.on('connection', (socket)=> {
             'Authorization':'Basic ' + auth,
             'Content-Type': 'application/json'
         }
-        fetch(`http://api.matterport.com/api/models/graph?query={model(id:"${model_id}"){assets{floorplan(format:"png", flags:photogramy){url}}}}`, {
+        fetch(`http://api.matterport.com/api/models/graph?query={model(id:"${model_id}"){assets{floorplans(formats:"png", flags:photogramy){filename url width height resolution origin{x y}}}}}`, {
             method:'GET',
             headers:headers,
         })
         .then(res => res.text())
         .then(data => {
             data = JSON.parse(data);
-            var src = data['data']['model']['assets']['floorplan']['url'];
+            var floorplans = data['data']['model']['assets']['floorplans'];
+
+            var src;
+            for(var i =0; i < floorplans.length; i++)
+            {
+                
+                if(floorplans[i]['filename'] == "render/vr_colorplan_000.png")
+                {
+                    src = floorplans[i];
+                    break;
+                }
+            }
             socket.emit('pic', src);
         })
         .catch(error => console.error(error));

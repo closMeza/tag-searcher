@@ -7,9 +7,10 @@ var mainOverlay;
 // Global vars associated with Tag Seacher
 var list;
 var tagsOverlay;
-var searchLabel;
+var searchBar;
 var searchBtn;
 var tagToggle;
+var reset;
 
 //Global vars associated with miniMap
 var map; 
@@ -25,10 +26,18 @@ var details;
 var showcaseFrame;
 var model_id;
 
+var image_details= {
+    w: '',
+    h:'',
+    x:'',
+    y:'',
+    res: ''
+}
+
 var settings = {
     sweep: '',
     mode: 'INSIDE',
-    transition: 'FLY'
+    transition: 'FADEOUT'
   };
 
 // This sets the global vars above and sets up connection
@@ -41,9 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     showcaseFrame = document.getElementById('showcase_iframe');
 
-    searchLabel = document.getElementById('search-bar');
+    searchBar = document.getElementById('search-bar');
     searchBtn = document.getElementById('search-btn')
     list = document.getElementById('mt-container');
+    reset = document.getElementById('reset');
+
 
     tagsOverlay = document.getElementById('tags-container');
     tagToggle = document.getElementById('tags-toggle');
@@ -57,8 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modelInfo = document.getElementById('model-info');
 
     detailsToggle = document.getElementById('details-toggle');
-    details = document.getElementById('details-overlay');
-    details.style.visibility= 'hidden';
+    detailsOverlay = document.getElementById('details-overlay');
+    details = document.getElementById('details');
+    detailsOverlay.style.visibility= 'hidden';
 
     var url = new URL(window.location.href);
 
@@ -71,7 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.emit('pic', model_id);
     socket.on('pic', (src)=>{
         //console.log(src);
-        pic.src = src;
+        pic.src = src['url'];
+        image_details['w'] = src['width'];
+        image_details['h'] = src['height'];
+        image_details['x'] = src['origin']['x'];
+        image_details['y'] = src['origin']['y'];
+        image_details['res'] = src['resolution'];
+
     })
 
     showcaseFrame.setAttribute('src', `https://my.matterport.com/show/?m=${model_id}&title=0&play=1&qs=1&gt=0&hr=0`)
@@ -141,7 +159,8 @@ async function showcaseHandler(mpSdk)
             var marker = {
                 mid: sweep.uuid,
                 x: sweep.position.x || 0,
-                y: sweep.position.z || 0
+                y: sweep.position.z || 0,
+                z: sweep.position.y || 0
             }
 
             // initaitilzes coords with appropiate values
@@ -159,11 +178,6 @@ async function showcaseHandler(mpSdk)
         }
     });
 
-    console.log(`minX: ${minX}`);
-    console.log(`maxX: ${maxX}`);
-    console.log(`minY: ${minY}`);
-    console.log(`maxY: ${maxY}`);
-
     // Mapping of the sweeps utilizing sweepsToMap function
     sweeps.map(sweepsToMap);
 
@@ -178,10 +192,16 @@ async function showcaseHandler(mpSdk)
     {
         if(sweep)
         {
+            var xScalar = (sweep.x + image_details['x'] * -1) * image_details['res'];
+            var x = xScalar/ image_details['w'] * 100 - 2; // 2 is equal to offset
+
+            var yScalar = (sweep.y + image_details['y']) * image_details['res'];
+            var y = 100 + yScalar/ image_details['h'] * 100 - 3; // 3 is equal to offset
+
             var btn = document.createElement('BUTTON'); // creates the elem
             var attList = 'sweep z-depth-3'; //class defined inside styles.css
-            var x = scaleToMap(sweep.x, minX, maxX,  67, 19); // these numbers give the appropiate postion for each sweep
-            var y = scaleToMap(sweep.y, minY, maxY, 57, 19); // these numbers give the appropiate postion for each sweep
+            //var x = scaleToMap(sweep.x, minX, maxX,  67, 19); // these numbers give the appropiate postion for each sweep
+            //var y = scaleToMap(sweep.y, minY, maxY, 57, 19); // these numbers give the appropiate postion for each sweep
 
             btn.setAttribute('id', 'm' + sweep.mid); // setting the attributes for the button element
             btn.setAttribute('value', sweep.mid);
@@ -282,12 +302,12 @@ async function showcaseHandler(mpSdk)
      * Output: User then gets moved to appropriate tag
      */
     list.addEventListener('click', (e)=> {
-        mpSdk.Mattertag.navigateToTag(e.target.id);
+        mpSdk.Mattertag.navigateToTag(e.target.id,  mpSdk.Mattertag.Transition.FADEOUT);
         mapOverlay.style.visibility ='hidden';
     })
 
     //search input functionality activates on pressing Enter
-    searchLabel.addEventListener('keyup', (e) => {
+    searchBar.addEventListener('keyup', (e) => {
         if(e.keyCode==13)
         {
             e.preventDefault();
@@ -296,11 +316,17 @@ async function showcaseHandler(mpSdk)
     })
 
     //search input functionality via typing within searchbar
-    searchLabel.addEventListener('input', search);
+    searchBar.addEventListener('input', search);
 
     //search input functionality via search button
     // this maybe removed and replaced with resetting feature
-    searchBtn.addEventListener('click', search)
+    //searchBtn.addEventListener('click', search)
+
+    reset.addEventListener('click', () => {
+        searchBar.value = '';
+        search();
+    })
+
 
     /**
      * Author: Carlos Meza
@@ -309,7 +335,7 @@ async function showcaseHandler(mpSdk)
      */
     function search() {
         var input, filter, ul, li, i, txtValue;
-        input = searchLabel;
+        input = searchBar;
         filter = input.value.toLowerCase();
         ul = list;
         li = ul.getElementsByTagName('li');
@@ -338,7 +364,7 @@ async function showcaseHandler(mpSdk)
         {
             tagsOverlay.style.visibility = 'visible';
             mapOverlay.style.visibility ='hidden';
-            details.style.visibility = 'hidden';
+            detailsOverlay.style.visibility = 'hidden';
         }
         else if(tagsOverlay.style.visibility == 'visible')
         {
@@ -358,7 +384,7 @@ async function showcaseHandler(mpSdk)
         {
             mapOverlay.style.visibility = 'visible';
             tagsOverlay.style.visibility ='hidden';
-            details.style.visibility = 'hidden';
+            detailsOverlay.style.visibility = 'hidden';
         }
         else if(mapOverlay.style.visibility == 'visible')
         {
@@ -373,15 +399,15 @@ async function showcaseHandler(mpSdk)
      * 
      */
     detailsToggle.addEventListener('click', () => {
-        if(details.style.visibility == 'hidden')
+        if(detailsOverlay.style.visibility == 'hidden')
         {
-            details.style.visibility = 'visible';
+            detailsOverlay.style.visibility = 'visible';
             tagsOverlay.style.visibility ='hidden';
             mapOverlay.style.visibility ='hidden';
         }
-        else if(details.style.visibility == 'visible')
+        else if(detailsOverlay.style.visibility == 'visible')
         {
-            details.style.visibility = 'hidden';
+            detailsOverlay.style.visibility = 'hidden';
         }
     });
 
@@ -396,12 +422,14 @@ async function showcaseHandler(mpSdk)
             mainOverlay.style.visibility = 'hidden';
             tagsOverlay.style.visibility ='hidden';
             mapOverlay.style.visibility ='hidden';
-            details.style.visibility = 'hidden';
+            detailsOverlay.style.visibility = 'hidden';
+            mainToggle.setAttribute('class', 'fas fa-chevron-right fa-2x')
 
         }
         else if(mainOverlay.style.visibility == 'hidden')
         {
             mainOverlay.style.visibility = 'visible';
+            mainToggle.setAttribute('class', 'fas fa-chevron-left fa-2x')
         }
     })
     /**

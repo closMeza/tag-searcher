@@ -21,6 +21,7 @@ body {
     background-color: rgba(0,0,0,0.5);
     color:white;
     z-index:2;
+    width:1em;
 }
 
 #title-gui {
@@ -49,7 +50,7 @@ body {
 
 #choice-bar{
     position: absolute;
-    top: 52px;
+    top: 51px;
     left: 50px;
     z-index:2;
     width:359px;
@@ -58,15 +59,37 @@ body {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-
 #tags-toggle {
     position: relative;
     z-index:2;
-    background-color: rgba(0,0,0,0.5);
+    /*background-color: rgba(0,0,0,0.5);*/
     cursor:pointer;
     color:white;
 }
 
+#details-toggle {
+    position: relative;
+    z-index:2;
+    /*background-color: rgba(0,0,0,0.5);*/
+    cursor:pointer;
+    color:white;
+}
+
+#minimap-toggle {
+    position: relative;
+    z-index:2;
+    /*background-color: rgba(0,0,0,0.5);*/
+    cursor:pointer;
+    color:white;  
+}
+
+.toggle:hover {
+    background-color: rgba(0,0,0,0.5);
+    color: #5C9D45;
+}
+.toggle:target {
+    background-color: rgba(0,0,0,0.5);
+}
 
 /*Need to create a class for the overlays containers*/
 #tags-container {
@@ -99,10 +122,13 @@ body {
     position: absolute;
 }
 
-#search-button {
-    display: inline-block;
-    position: absolute;
-    height: 5vmin;
+#reset {
+    color:white;
+    cursor: pointer;
+}
+
+#reset:hover {
+    color: #5C9D45;
 }
 
 li {
@@ -110,11 +136,12 @@ li {
 }
 
 #mt-container li:hover:not(.header) {
-    background-color:grey; /* Add a hover effect to all links, except for headers */
+    background-color: rgba(0,0,0,0.5);
+    color: #5C9D45; /* Add a hover effect to all links, except for headers */
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 15px;
 }
 
 ::-webkit-scrollbar-track {
@@ -130,6 +157,21 @@ li {
     background-color: black;
 } 
 
+
+#details-overlay #details {
+    position: absolute;
+    display: inline-block;
+    top: 78px;
+    left: 35px;
+    width: 359px;
+    max-height: 6%;
+    text-align: center;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+    color:white
+}
+
 /*Need to create a class for the overlays containers*/
 #minimap-overlay {
     position: absolute;
@@ -143,35 +185,6 @@ li {
     cursor: pointer;
 }
 
-#details-overlay {
-    position: absolute;
-    display: inline-block;
-    top: 78px;
-    left: 35px;
-    width: 359px;
-    height: 3%;
-    text-align: center;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-    color:white
-}
-
-#details-toggle {
-    position: relative;
-    z-index:2;
-    background-color: rgba(0,0,0,0.5);
-    cursor:pointer;
-    color:white;
-}
-
-#minimap-toggle {
-    position: relative;
-    z-index:2;
-    background-color: rgba(0,0,0,0.5);
-    cursor:pointer;
-    color:white;  
-}
 
 #map {
     position: absolute;
@@ -198,6 +211,8 @@ li {
     top:0px;
     left:0px;
 }
+
+
 
 .sweep:hover {
     background-color: #5C9D45;
