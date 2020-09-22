@@ -59,10 +59,9 @@ body {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-#tags-toggle {
+/*#tags-toggle {
     position: relative;
     z-index:2;
-    /*background-color: rgba(0,0,0,0.5);*/
     cursor:pointer;
     color:white;
 }
@@ -70,7 +69,6 @@ body {
 #details-toggle {
     position: relative;
     z-index:2;
-    /*background-color: rgba(0,0,0,0.5);*/
     cursor:pointer;
     color:white;
 }
@@ -78,7 +76,13 @@ body {
 #minimap-toggle {
     position: relative;
     z-index:2;
-    /*background-color: rgba(0,0,0,0.5);*/
+    cursor:pointer;
+    color:white;  
+}
+*/
+.toggle {
+    position: relative;
+    z-index:2;
     cursor:pointer;
     color:white;  
 }
@@ -185,6 +189,17 @@ li {
     cursor: pointer;
 }
 
+.overlay {
+    position: absolute;
+    display: inline-block;
+    top: 78px;
+    left: 35px;
+    width: 359px;
+    height: 35%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 2;
+    cursor: pointer;
+}
 
 #map {
     position: absolute;
@@ -220,12 +235,12 @@ li {
 
 .sweep.active {
     background-color: #5C9D45;
-    border: 0.25rem solid rgba(249,211,66, 0.79);
+    border: 0.20rem solid rgba(249,211,66, 0.79);
 }
 
 .z-depth-3 {
-    -webkit-box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2);
-    box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.1);  /* .2 to .1*/
+    box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.1); /* .2 to .1*/
 
 }
 

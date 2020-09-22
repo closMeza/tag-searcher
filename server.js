@@ -27,6 +27,7 @@ io.on('connection', (socket)=> {
     console.log("connected")
     socket.on('pic', (msg) => {
         model_id = msg;
+        console.log(model_id);
         var tok = process.env.TOKEN;
         var sec = process.env.SECRET;
     
@@ -37,13 +38,23 @@ io.on('connection', (socket)=> {
             'Authorization':'Basic ' + auth,
             'Content-Type': 'application/json'
         }
-        fetch(`http://api.matterport.com/api/models/graph?query={model(id:"${model_id}"){assets{floorplans(formats:"png", flags:photogramy){filename url width height resolution origin{x y}}}}}`, {
+        const body={
+            query: `query{model(id:"${model_id}"){assets{floorplans(formats:"png", flags:photogramy){filename url width height resolution origin{x y}}}}}`
+        }
+
+        fetch("https://api.matterport.com/api/models/graph", {
+            method:'POST',
+            headers:headers,
+            body: JSON.stringify(body)
+        })
+        /*fetch(`http://api.matterport.com/api/models/graph?query={model(id:"${model_id}"){assets{floorplans(formats:"png", flags:photogramy){filename url width height resolution origin{x y}}}}}`, {
             method:'GET',
             headers:headers,
-        })
+        })*/
         .then(res => res.text())
         .then(data => {
             data = JSON.parse(data);
+            console.log(data);
             var floorplans = data['data']['model']['assets']['floorplans'];
 
             var src;
@@ -61,8 +72,6 @@ io.on('connection', (socket)=> {
         .catch(error => console.error(error));
     })
 })
-
-
 
 http.listen(PORT, ()=> { 
     console.log(`Server Listening on port ${PORT}`);
