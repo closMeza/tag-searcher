@@ -44,9 +44,9 @@ var settings = {
 // to matterport once the page has finished loading
 document.addEventListener('DOMContentLoaded', () => {
     mainToggle = document.getElementById('main-toggle');
-    mainToggle.style.visibility = 'hidden';
+    //mainToggle.style.visibility = 'hidden';
     mainOverlay = document.getElementById('overlay');
-    mainOverlay.style.visibility = 'hidden';
+    //mainOverlay.style.visibility = 'hidden';
     
     showcaseFrame = document.getElementById('showcase_iframe');
 
@@ -319,7 +319,6 @@ async function showcaseHandler(mpSdk)
             .catch((error) =>console.log(error));
     }
 
-
     // This is the entry point for mattertag search functionality
     var data = parseMattertags(mattertags);
 
@@ -340,7 +339,7 @@ async function showcaseHandler(mpSdk)
             tags.push([str, mattertags[i].sid]);
 
         }
-        tags.sort();
+        tags.sort(); 
         return tags;
     }
 
@@ -370,7 +369,7 @@ async function showcaseHandler(mpSdk)
         if (/Mobi|Android/i.test(navigator.userAgent))  // this condition checks if on mobile/tablet
         {
             // if on mobile when a mattertag is selected from the list it toggles to off to prevent them
-            // from overlapping.
+            // from overlapping. (Improves user experience)
             mpSdk.Mattertag.navigateToTag(e.target.id,  mpSdk.Mattertag.Transition.FADEOUT);
             mapOverlay.style.visibility ='hidden'; 
             tagsOverlay.style.visibility ='hidden';
@@ -402,7 +401,6 @@ async function showcaseHandler(mpSdk)
         searchBar.value = '';
         search();
     })
-
 
     /**
      * Author: Carlos Meza
@@ -466,5 +464,4 @@ async function showcaseHandler(mpSdk)
             curr.classList += ' active';
         }
     }
-
 }
